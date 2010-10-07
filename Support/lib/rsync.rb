@@ -7,7 +7,7 @@ module Rsync
   class ConfigError < StandardError; end
   PLFILE = ENV['HOME'] + '/Library/Preferences/com.macromates.textmate.plist'
   PLKEY  = 'rsync.tmbundle Credentials'
-  WINDOW = e_sh File.join(ENV['TM_BUNDLE_SUPPORT'], 'nibs/rsync.nib')
+  WINDOW = e_sh File.join(ENV['TM_BUNDLE_SUPPORT'], 'nibs/Preferences.nib')
   DIALOG = e_sh ENV['DIALOG']
 
   CONFIG = OSX::PropertyList.load(File.read(PLFILE))[PLKEY] || {}

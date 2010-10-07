@@ -155,13 +155,13 @@
 						<object class="NSTextField" id="47862109">
 							<reference key="NSNextResponder" ref="929977227"/>
 							<int key="NSvFlags">268</int>
-							<string key="NSFrame">{{17, 328}, {61, 17}}</string>
+							<string key="NSFrame">{{17, 328}, {130, 17}}</string>
 							<reference key="NSSuperview" ref="929977227"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="934683988">
 								<int key="NSCellFlags">68288064</int>
 								<int key="NSCellFlags2">272630784</int>
-								<string key="NSContents">SSH Host</string>
+								<string key="NSContents">SSH Host (Required)</string>
 								<reference key="NSSupport" ref="654270890"/>
 								<reference key="NSControlView" ref="47862109"/>
 								<reference key="NSBackgroundColor" ref="19618623"/>
@@ -171,13 +171,13 @@
 						<object class="NSTextField" id="667427404">
 							<reference key="NSNextResponder" ref="929977227"/>
 							<int key="NSvFlags">268</int>
-							<string key="NSFrame">{{17, 273}, {111, 17}}</string>
+							<string key="NSFrame">{{17, 273}, {180, 17}}</string>
 							<reference key="NSSuperview" ref="929977227"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="735912851">
 								<int key="NSCellFlags">68288064</int>
 								<int key="NSCellFlags2">272630784</int>
-								<string key="NSContents">SSH Remote Path</string>
+								<string key="NSContents">SSH Remote Path (Required)</string>
 								<reference key="NSSupport" ref="654270890"/>
 								<reference key="NSControlView" ref="667427404"/>
 								<reference key="NSBackgroundColor" ref="19618623"/>
@@ -707,9 +707,9 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{392, 712}, {406, 365}}</string>
+					<string>{{401, 711}, {406, 365}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{392, 712}, {406, 365}}</string>
+					<string>{{401, 711}, {406, 365}}</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<object class="NSAffineTransform">
