@@ -5,69 +5,93 @@ require ENV['TM_SUPPORT_PATH'] + '/lib/osx/plist'
 
 module Rsync
   class ConfigError < StandardError; end
-
+  PLFILE = ENV['HOME'] + '/Library/Preferences/com.macromates.textmate.plist'
+  PLKEY  = 'rsync.tmbundle Credentials'
   WINDOW = e_sh File.join(ENV['TM_BUNDLE_SUPPORT'], 'nibs/rsync.nib')
   DIALOG = e_sh ENV['DIALOG']
 
-  PARAMS = {
+  CONFIG = OSX::PropertyList.load(File.read(PLFILE))[PLKEY] || {}
+  CONFIG.merge!({
     'SSH_KEY'            => ENV['SSH_KEY'],
     'SSH_USER'           => ENV['SSH_USER'],
     'SSH_HOST'           => ENV['SSH_HOST'],
     'SSH_REMOTE_PATH'    => ENV['SSH_REMOTE_PATH'],
     'RSYNC_OPTIONS'      => ENV['RSYNC_OPTIONS'],
     'RSYNC_EXCLUDE_FROM' => ENV['RSYNC_EXCLUDE_FROM']
-  }.delete_if { |key, val| val.nil? }
+  }.delete_if { |key, val| val.nil? })
 
-  def self.execute!
-    unless configured?
-      ask_for_config!
+  extend self
+
+  def execute!
+    print_html rsync!
+  rescue ConfigError
+    msg = "SSH_HOST and SSH_REMOTE_PATH must be set to continue"
+    print_html(msg, true)
+  end
+
+  def ask_for_config!
+    res = %x{#{DIALOG} -p '#{CONFIG.to_plist}' -q #{WINDOW}}
+    CONFIG.merge!(OSX::PropertyList.load(res))
+    save_config
+  end
+
+  private
+
+  def print_html(output, error = false)
+    html_header 'rsync Project'
+    # things went okay
+    if error
+      puts "<h3>Error:</h3>"
+    else
+      puts "<h3>rsync command:</h3>"
+      puts "<pre>#{command}</pre>"
+      puts "<h3>Output:</h3>"
     end
-    begin
-      [rsync!, command]
-    rescue ConfigError
-      "SSH_HOST and SSH_REMOTE_PATH must be set to continue"
+
+    puts "<pre>#{output}</pre>"
+
+    html_footer
+  end
+
+  def configured?
+    CONFIG['SSH_HOST'] && CONFIG['SSH_REMOTE_PATH']
+  end
+
+  def save_config
+    plist = OSX::PropertyList.load(File.read(PLFILE))
+    plist[PLKEY] = CONFIG
+    File.open(PLFILE, 'w') do |io|
+      OSX::PropertyList.dump(io, plist)
     end
   end
 
-  def self.configured?
-    PARAMS['SSH_HOST'] && PARAMS['SSH_REMOTE_PATH']
-  end
-  private_class_method :configured?
-
-  def self.ask_for_config!
-    res = %x{#{DIALOG} -p '#{PARAMS.to_plist}' -m #{WINDOW}}
-    PARAMS.merge!(OSX::PropertyList.load(res))
-  end
-  private_class_method :ask_for_config!
-
-  def self.rsync!
+  def rsync!
     if configured?
       %x{#{command}}
     else
       raise ConfigError
     end
   end
-  private_class_method :rsync!
 
-  def self.command
+  def command
     return @command if @command
 
     project = ENV['TM_PROJECT_DIRECTORY']
 
-    if PARAMS['SSH_KEY'] && PARAMS['SSH_KEY'] != ""
-      ssh = "ssh -i #{PARAMS['SSH_KEY']}"
+    if CONFIG['SSH_KEY'] && CONFIG['SSH_KEY'] != ""
+      ssh = "ssh -i #{CONFIG['SSH_KEY']}"
     else
       ssh = "ssh"
     end
 
     opts = '-auv'
 
-    if PARAMS['RSYNC_OPTIONS'] && PARAMS['RSYNC_OPTIONS'] != ""
-      opts += " #{PARAMS['RSYNC_OPTIONS']}"
+    if CONFIG['RSYNC_OPTIONS'] && CONFIG['RSYNC_OPTIONS'] != ""
+      opts += " #{CONFIG['RSYNC_OPTIONS']}"
     end
 
-    if PARAMS['RSYNC_EXCLUDE_FROM'] && PARAMS['RSYNC_EXCLUDE_FROM'] != ""
-      exclude = PARAMS['RSYNC_EXCLUDE_FROM']
+    if CONFIG['RSYNC_EXCLUDE_FROM'] && CONFIG['RSYNC_EXCLUDE_FROM'] != ""
+      exclude = CONFIG['RSYNC_EXCLUDE_FROM']
       if File.exists?(exclude)
         opts += " --exclude-from=#{exclude}"
       elsif File.exists?(File.join(project, exclude))
@@ -75,13 +99,13 @@ module Rsync
       end
     end
 
-    remote = "#{PARAMS['SSH_HOST']}:#{PARAMS['SSH_REMOTE_PATH']}"
+    remote = "#{CONFIG['SSH_HOST']}:#{CONFIG['SSH_REMOTE_PATH']}"
 
-    if PARAMS['SSH_USER'] && PARAMS['SSH_USER'] != ""
-      remote = "#{PARAMS['SSH_USER']}@#{remote}"
+    if CONFIG['SSH_USER'] && CONFIG['SSH_USER'] != ""
+      remote = "#{CONFIG['SSH_USER']}@#{remote}"
     end
 
     @command = %{rsync -e "#{ssh}" #{opts} "#{project}"/ "#{remote}"}
   end
-  private_class_method :command
+
 end

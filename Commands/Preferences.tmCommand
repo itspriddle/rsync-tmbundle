@@ -7,19 +7,18 @@
 	<key>command</key>
 	<string>#!/usr/bin/env ruby
 
+require ENV['TM_SUPPORT_PATH']   + '/lib/tm/detach'
 require ENV['TM_BUNDLE_SUPPORT'] + '/lib/rsync'
 
-Rsync.execute!
+TextMate.detach { Rsync.ask_for_config! }
 </string>
 	<key>input</key>
 	<string>none</string>
-	<key>keyEquivalent</key>
-	<string>^@r</string>
 	<key>name</key>
-	<string>rsync Project now</string>
+	<string>Preferences...</string>
 	<key>output</key>
-	<string>showAsHTML</string>
+	<string>showAsTooltip</string>
 	<key>uuid</key>
-	<string>3CB55098-1709-444B-A3BE-E72680134CF0</string>
+	<string>CDCBD7FD-918D-49B0-9227-3BB026647010</string>
 </dict>
 </plist>
