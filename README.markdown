@@ -10,10 +10,12 @@ via **&#8963;+&#8984;+r**
     % osascript -e 'tell app "TextMate" to reload bundles'
 
 
-## Setup
+## Configuration
 
-Add the following variables to your TM project (you can set them globally if
-you want):
+Set configuration variables in Bundles > rsync > Configuration.
+
+Optionally, you can add the following variables to your TM project (or they
+can be set globally):
 
     $SSH_REMOTE_PATH (Required)
       The FULL system path to the remote directory to rsync to
@@ -40,4 +42,4 @@ you want):
 
 ## Testing
 
-Add `--dry-run` to $RSYNC_OPTIONS to run in testing mode
+Add `--dry-run` to rsync Options to run in testing mode.
