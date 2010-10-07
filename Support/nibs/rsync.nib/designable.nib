@@ -43,7 +43,7 @@
 				<int key="NSWindowBacking">2</int>
 				<string key="NSWindowRect">{{235, 194}, {406, 365}}</string>
 				<int key="NSWTFlags">611844096</int>
-				<string key="NSWindowTitle">rsync</string>
+				<string key="NSWindowTitle">rsync Configuration</string>
 				<string key="NSWindowClass">NSWindow</string>
 				<nil key="NSViewClass"/>
 				<string key="NSWindowContentMaxSize">{1.79769e+308, 1.79769e+308}</string>
